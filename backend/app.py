@@ -3,9 +3,12 @@ from flask_cors import CORS
 import os
 import requests
 import json
-from models import db, Product
+from models import db, Product, User, bcrypt
 from werkzeug.utils import secure_filename
 from PIL import Image
+import jwt
+from datetime import datetime, timedelta
+from functools import wraps
 
 app = Flask(__name__)
 CORS(app)
@@ -13,6 +16,7 @@ CORS(app)
 # Database Config
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///oglabs.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
 
 # File Upload Config
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'uploads', 'products')
@@ -24,9 +28,60 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 db.init_app(app)
+bcrypt.init_app(app)
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# JWT Helper Functions
+def generate_token(user_id):
+    """Generate JWT token with 24-hour expiration"""
+    payload = {
+        'user_id': user_id,
+        'exp': datetime.utcnow() + timedelta(hours=24),
+        'iat': datetime.utcnow()
+    }
+    return jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
+
+def verify_token(token):
+    """Verify and decode JWT token"""
+    try:
+        payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+        return payload
+    except jwt.ExpiredSignatureError:
+        return None
+    except jwt.InvalidTokenError:
+        return None
+
+def token_required(f):
+    """Decorator to protect routes requiring authentication"""
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+        
+        # Get token from Authorization header
+        if 'Authorization' in request.headers:
+            auth_header = request.headers['Authorization']
+            try:
+                token = auth_header.split(' ')[1]  # Bearer <token>
+            except IndexError:
+                return jsonify({'error': 'Invalid token format'}), 401
+        
+        if not token:
+            return jsonify({'error': 'Token is missing'}), 401
+        
+        payload = verify_token(token)
+        if not payload:
+            return jsonify({'error': 'Token is invalid or expired'}), 401
+        
+        # Get user from database
+        current_user = User.query.get(payload['user_id'])
+        if not current_user:
+            return jsonify({'error': 'User not found'}), 401
+        
+        return f(current_user, *args, **kwargs)
+    
+    return decorated
 
 # Placeholder for API Key
 # os.environ["GEMINI_API_KEY"] = "YOUR_API_KEY"
@@ -63,6 +118,76 @@ def seed_products():
     db.session.bulk_save_objects(products)
     db.session.commit()
     print("Database seeded!")
+
+# Authentication Routes
+@app.route('/api/auth/signup', methods=['POST'])
+def signup():
+    data = request.json
+    
+    # Validate required fields
+    if not data.get('email') or not data.get('password') or not data.get('full_name'):
+        return jsonify({'error': 'Missing required fields'}), 400
+    
+    # Validate password length
+    if len(data['password']) < 8:
+        return jsonify({'error': 'Password must be at least 8 characters'}), 400
+    
+    # Check if user already exists
+    existing_user = User.query.filter_by(email=data['email']).first()
+    if existing_user:
+        return jsonify({'error': 'Email already registered'}), 409
+    
+    # Create new user
+    new_user = User(
+        email=data['email'],
+        full_name=data['full_name']
+    )
+    new_user.set_password(data['password'])
+    
+    db.session.add(new_user)
+    db.session.commit()
+    
+    # Generate token
+    token = generate_token(new_user.id)
+    
+    return jsonify({
+        'message': 'User created successfully',
+        'token': token,
+        'user': new_user.to_dict()
+    }), 201
+
+@app.route('/api/auth/login', methods=['POST'])
+def login():
+    data = request.json
+    
+    # Validate required fields
+    if not data.get('email') or not data.get('password'):
+        return jsonify({'error': 'Missing email or password'}), 400
+    
+    # Find user
+    user = User.query.filter_by(email=data['email']).first()
+    
+    # Verify credentials
+    if not user or not user.check_password(data['password']):
+        return jsonify({'error': 'Invalid email or password'}), 401
+    
+    # Generate token
+    token = generate_token(user.id)
+    
+    return jsonify({
+        'message': 'Login successful',
+        'token': token,
+        'user': user.to_dict()
+    }), 200
+
+@app.route('/api/auth/verify', methods=['GET'])
+@token_required
+def verify(current_user):
+    """Verify token and return user data"""
+    return jsonify({
+        'valid': True,
+        'user': current_user.to_dict()
+    }), 200
 
 @app.route('/api/health', methods=['GET'])
 def health_check():

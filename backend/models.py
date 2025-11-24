@@ -1,6 +1,32 @@
 from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
+from datetime import datetime
 
 db = SQLAlchemy()
+bcrypt = Bcrypt()
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password_hash = db.Column(db.String(255), nullable=False)
+    full_name = db.Column(db.String(100), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def set_password(self, password):
+        """Hash and set the user's password"""
+        self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+
+    def check_password(self, password):
+        """Verify the user's password"""
+        return bcrypt.check_password_hash(self.password_hash, password)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "email": self.email,
+            "full_name": self.full_name,
+            "created_at": self.created_at.isoformat() if self.created_at else None
+        }
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
