@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import ProductGrid from './components/ProductGrid';
@@ -9,6 +10,8 @@ import AllProducts from './pages/AllProducts';
 import ProductDetail from './pages/ProductDetail';
 import Checkout from './pages/Checkout';
 import Admin from './pages/Admin';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
 
 function App() {
   const [cartCount, setCartCount] = useState(0);
@@ -40,27 +43,31 @@ function App() {
   );
 
   return (
-    <Router>
-      <div className="App">
-        <div className="noise-overlay"></div>
+    <AuthProvider>
+      <Router>
+        <div className="App">
+          <div className="noise-overlay"></div>
 
-        <div className={`toast ${showToast ? 'show' : ''}`}>
-          <span dangerouslySetInnerHTML={{ __html: toastMessage }}></span>
+          <div className={`toast ${showToast ? 'show' : ''}`}>
+            <span dangerouslySetInnerHTML={{ __html: toastMessage }}></span>
+          </div>
+
+          <Navbar cartCount={cartCount} />
+
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/shop" element={<AllProducts />} />
+            <Route path="/product/:id" element={<ProductDetail addToCart={addToCart} />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+          </Routes>
+
+          <Footer />
         </div>
-
-        <Navbar cartCount={cartCount} />
-
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/shop" element={<AllProducts />} />
-          <Route path="/product/:id" element={<ProductDetail addToCart={addToCart} />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/admin" element={<Admin />} />
-        </Routes>
-
-        <Footer />
-      </div>
-    </Router>
+      </Router>
+    </AuthProvider>
   );
 }
 
