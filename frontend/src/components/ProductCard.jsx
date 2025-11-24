@@ -6,7 +6,7 @@ const ProductCard = ({ product }) => {
 
     return (
         <div className="product-card" onClick={() => navigate(`/product/${product.id}`)}>
-            <div className={`product-image ${product.image_pattern}`} style={product.image_url ? { backgroundImage: `url(${product.image_url})`, backgroundSize: 'cover' } : {}}>
+            <div className={`product-image ${product.image_pattern}`} style={product.image_url ? { backgroundImage: `url(http://localhost:5000${product.image_url})`, backgroundSize: 'cover' } : {}}>
                 <div className="product-overlay">
                     <span className="add-btn">View Details</span>
                 </div>

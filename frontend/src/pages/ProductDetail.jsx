@@ -36,9 +36,9 @@ const ProductDetail = ({ addToCart }) => {
                 <span className="text-white">{product.title}</span>
             </div>
 
-            <div className="flex flex-col lg:flex-row gap-10 mb-16 items-start">
+            <div className="flex flex-col lg:flex-row gap-16 mb-16 items-start">
                 {/* Left Column: Image with Measurements */}
-                <div className="flex-1 lg:max-w-500 relative">
+                <div className="flex-1 lg:max-w-500 relative lg:pr-8">
                     <div className="bg-white p-4 shadow-2xl relative">
                         {/* Height Measurement - Left Side */}
                         <div style={{
@@ -90,8 +90,7 @@ const ProductDetail = ({ addToCart }) => {
                         <div className={`product-image ${product.image_pattern}`} style={{
                             width: '100%',
                             aspectRatio: '1/1.414',
-                            maxHeight: '60vh',
-                            backgroundImage: product.image_url ? `url(${product.image_url})` : 'none',
+                            backgroundImage: product.image_url ? `url(http://localhost:5000${product.image_url})` : 'none',
                             backgroundSize: 'cover',
                             backgroundPosition: 'center',
                             boxShadow: 'inset 0 0 20px rgba(0,0,0,0.2)',
