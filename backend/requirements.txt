@@ -1,5 +1,6 @@
 flask
 flask-cors
 requests
+pillow
 python-dotenv
 flask-sqlalchemy

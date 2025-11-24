@@ -16,7 +16,6 @@ const Navbar = ({ cartCount }) => {
                     <Link to="/shop">[ The Wall ]</Link>
                     <a href="/#oracle">[ The Oracle ]</a>
                     <a href="/#about">[ Manifesto ]</a>
-                    <Link to="/admin">[ Admin ]</Link>
                 </div>
 
                 <button className="relative" onClick={() => navigate('/checkout')}>
