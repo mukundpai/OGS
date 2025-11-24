@@ -28,7 +28,7 @@ const ProductDetail = ({ addToCart }) => {
     return (
         <div className="container section" style={{ paddingTop: '100px', paddingBottom: '40px' }}>
             {/* Breadcrumbs */}
-            <div className="flex items-center gap-2 text-[10px] font-mono text-gray mb-6 uppercase">
+            <div className="flex items-center gap-2 text-xxs font-mono text-gray mb-6 uppercase">
                 <Link to="/" className="hover:text-white">Home</Link>
                 <ChevronRight size={10} />
                 <Link to="/shop" className="hover:text-white">{product.category} Posters</Link>
@@ -37,26 +37,66 @@ const ProductDetail = ({ addToCart }) => {
             </div>
 
             <div className="flex flex-col lg:flex-row gap-10 mb-16 items-start">
-                {/* Left Column: Images */}
-                <div className="flex-1 lg:max-w-[500px]">
-                    <div className="bg-white p-4 shadow-2xl mb-4 relative">
+                {/* Left Column: Image with Measurements */}
+                <div className="flex-1 lg:max-w-500 relative">
+                    <div className="bg-white p-4 shadow-2xl relative">
+                        {/* Height Measurement - Left Side */}
+                        <div style={{
+                            position: 'absolute',
+                            left: '-40px',
+                            top: '16px',
+                            bottom: '16px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '4px'
+                        }}>
+                            <div style={{ width: '1px', flex: 1, background: '#fff' }}></div>
+                            <span style={{
+                                fontSize: '10px',
+                                fontFamily: 'var(--font-mono)',
+                                color: '#fff',
+                                background: '#000',
+                                padding: '2px 4px',
+                                whiteSpace: 'nowrap'
+                            }}>42.0 cm</span>
+                            <div style={{ width: '1px', flex: 1, background: '#fff' }}></div>
+                        </div>
+
+                        {/* Width Measurement - Bottom */}
+                        <div style={{
+                            position: 'absolute',
+                            left: '16px',
+                            right: '16px',
+                            bottom: '-30px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '4px'
+                        }}>
+                            <div style={{ height: '1px', flex: 1, background: '#fff' }}></div>
+                            <span style={{
+                                fontSize: '10px',
+                                fontFamily: 'var(--font-mono)',
+                                color: '#fff',
+                                background: '#000',
+                                padding: '2px 4px',
+                                whiteSpace: 'nowrap'
+                            }}>29.7 cm</span>
+                            <div style={{ height: '1px', flex: 1, background: '#fff' }}></div>
+                        </div>
+
                         <div className={`product-image ${product.image_pattern}`} style={{
                             width: '100%',
                             aspectRatio: '1/1.414',
-                            maxHeight: '60vh', // Limit height to fit screen
+                            maxHeight: '60vh',
                             backgroundImage: product.image_url ? `url(${product.image_url})` : 'none',
                             backgroundSize: 'cover',
                             backgroundPosition: 'center',
                             boxShadow: 'inset 0 0 20px rgba(0,0,0,0.2)',
-                            border: '8px solid #111' // Thinner frame
+                            border: '2px solid #000'
                         }}></div>
-                    </div>
-
-                    {/* Thumbnails (Mock) */}
-                    <div className="grid grid-cols-4 gap-2">
-                        {[1, 2, 3, 4].map((i) => (
-                            <div key={i} className="aspect-a3 bg-gray-900 border border-gray-800 cursor-pointer hover:border-white transition-colors"></div>
-                        ))}
                     </div>
                 </div>
 
@@ -67,24 +107,8 @@ const ProductDetail = ({ addToCart }) => {
 
                     <div className="text-2xl font-bold text-white mb-6">{product.price}</div>
 
-                    {/* Selectors */}
-                    <div className="mb-6">
-                        <label className="block text-[10px] font-bold uppercase mb-2">Frame Type</label>
-                        <div className="flex gap-3">
-                            {['Black', 'White', 'Oak'].map(type => (
-                                <button
-                                    key={type}
-                                    onClick={() => setFrameType(type)}
-                                    className={`px-4 py-2 border text-xs font-mono uppercase transition-all ${frameType === type ? 'border-white text-white bg-gray-900' : 'border-gray-700 text-gray hover:border-white'}`}
-                                >
-                                    {type}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
                     <div className="mb-8">
-                        <label className="block text-[10px] font-bold uppercase mb-2">Poster Size</label>
+                        <label className="block text-xxs font-bold uppercase mb-2">Poster Size</label>
                         <div className="flex gap-3">
                             {['A3', 'A2', 'A1'].map(s => (
                                 <button

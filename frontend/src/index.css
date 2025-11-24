@@ -914,4 +914,13 @@ footer {
   .lg\:flex-row {
     flex-direction: row;
   }
+
+  .lg\:max-w-500 {
+    max-width: 500px;
+  }
+}
+
+.text-xxs {
+  font-size: 0.625rem;
+  line-height: 0.75rem;
 }
