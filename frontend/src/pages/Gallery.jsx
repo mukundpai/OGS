@@ -80,33 +80,30 @@ const Gallery = () => {
 
                 <button
                     onClick={() => setShowUploadModal(true)}
-                    className="bg-white text-black px-8 py-3 font-bold hover:bg-gray-200 transition-colors inline-flex items-center space-x-2"
+                    className="group relative px-8 py-3 overflow-hidden border border-white/20 hover:border-white transition-colors duration-300"
                 >
-                    <Plus size={18} />
-                    <span>UPLOAD YOUR WALL</span>
+                    <div className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
+                    <div className="relative flex items-center space-x-2 group-hover:text-black transition-colors duration-300">
+                        <Plus size={16} />
+                        <span className="font-mono text-sm tracking-widest">UPLOAD YOUR WALL</span>
+                    </div>
                 </button>
             </div>
 
             {/* Filter Bar */}
-            <div className="container mx-auto px-6 mb-8 flex justify-center space-x-6 border-b border-white/10 pb-4">
-                <button
-                    onClick={() => setFilter('newest')}
-                    className={`text-sm font-mono transition-colors ${filter === 'newest' ? 'text-white border-b border-white pb-4 -mb-4.5' : 'text-gray-500 hover:text-white'}`}
-                >
-                    NEWEST
-                </button>
-                <button
-                    onClick={() => setFilter('popular')}
-                    className={`text-sm font-mono transition-colors ${filter === 'popular' ? 'text-white border-b border-white pb-4 -mb-4.5' : 'text-gray-500 hover:text-white'}`}
-                >
-                    POPULAR
-                </button>
-                <button
-                    onClick={() => setFilter('featured')}
-                    className={`text-sm font-mono transition-colors ${filter === 'featured' ? 'text-white border-b border-white pb-4 -mb-4.5' : 'text-gray-500 hover:text-white'}`}
-                >
-                    FEATURED
-                </button>
+            <div className="container mx-auto px-6 mb-12 flex justify-center gap-12 border-b border-white/5 pb-6">
+                {['newest', 'popular', 'featured'].map((f) => (
+                    <button
+                        key={f}
+                        onClick={() => setFilter(f)}
+                        className={`text-xs font-mono tracking-[0.2em] uppercase transition-all duration-300 ${filter === f
+                            ? 'text-white border-b border-white pb-6 -mb-6.5'
+                            : 'text-gray-600 hover:text-white'
+                            }`}
+                    >
+                        {f}
+                    </button>
+                ))}
             </div>
 
             {/* Gallery Grid */}
@@ -116,7 +113,7 @@ const Gallery = () => {
                         <Loader className="animate-spin text-gray-500" />
                     </div>
                 ) : submissions.length > 0 ? (
-                    <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-12">
                         {submissions.map(sub => (
                             <GalleryCard
                                 key={sub.id}

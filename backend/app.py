@@ -3,7 +3,7 @@ from flask_cors import CORS
 import os
 import requests
 import json
-from models import db, Product, User, bcrypt
+from models import db, Product, User, Order, GallerySubmission, bcrypt
 from werkzeug.utils import secure_filename
 from PIL import Image
 import jwt
@@ -307,10 +307,193 @@ def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 @app.route('/api/checkout', methods=['POST'])
-def checkout():
+@token_required
+def checkout(current_user):
     data = request.json
-    # Mock checkout logic
-    return jsonify({"status": "success", "orderId": "OG-" + os.urandom(4).hex().upper()})
+    # Mock checkout logic - in real app this would handle payment processing
+    
+    # Create order record
+    new_order = Order(
+        user_id=current_user.id,
+        total_amount=data.get('total', 0),
+        status='completed'
+    )
+    db.session.add(new_order)
+    db.session.commit()
+    
+    return jsonify({
+        "status": "success", 
+        "orderId": f"OG-{new_order.id:06d}",
+        "message": "Order placed successfully"
+    })
+
+@app.route('/api/orders', methods=['GET'])
+@token_required
+def get_user_orders(current_user):
+    orders = Order.query.filter_by(user_id=current_user.id).order_by(Order.created_at.desc()).all()
+    
+    orders_data = []
+    for order in orders:
+        orders_data.append({
+            'id': f"OG-{order.id:06d}",
+            'total_amount': order.total_amount,
+            'status': order.status,
+            'created_at': order.created_at.isoformat(),
+            'items_count': 1 # Placeholder as we don't have order items table yet, or we can just show total
+        })
+        
+    return jsonify(orders_data)
+
+# Gallery Routes
+
+@app.route('/api/gallery', methods=['GET'])
+def get_gallery():
+    # Get approved submissions
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 20, type=int)
+    sort = request.args.get('sort', 'newest')
+    
+    query = GallerySubmission.query.filter_by(is_approved=True)
+    
+    if sort == 'newest':
+        query = query.order_by(GallerySubmission.created_at.desc())
+    elif sort == 'popular':
+        query = query.order_by(GallerySubmission.likes.desc())
+    elif sort == 'featured':
+        query = query.filter_by(is_featured=True).order_by(GallerySubmission.created_at.desc())
+        
+    submissions = query.paginate(page=page, per_page=per_page, error_out=False)
+    
+    return jsonify({
+        'submissions': [s.to_dict() for s in submissions.items],
+        'total': submissions.total,
+        'pages': submissions.pages,
+        'current_page': submissions.page
+    })
+
+@app.route('/api/gallery/upload', methods=['POST'])
+@token_required
+def upload_gallery_submission(current_user):
+    # Check if user has made a purchase
+    if not current_user.orders:
+        return jsonify({'error': 'Only verified customers can upload to the gallery. Please make a purchase first.'}), 403
+        
+    if 'image' not in request.files:
+        return jsonify({"error": "No image file provided"}), 400
+        
+    file = request.files['image']
+    data = request.form
+    
+    if file.filename == '':
+        return jsonify({"error": "No selected file"}), 400
+        
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        import time
+        filename = f"gallery_{int(time.time())}_{filename}"
+        
+        # Ensure gallery upload directory exists
+        gallery_upload_folder = os.path.join(app.config['UPLOAD_FOLDER'], '..', 'gallery')
+        os.makedirs(gallery_upload_folder, exist_ok=True)
+        
+        filepath = os.path.join(gallery_upload_folder, filename)
+        
+        # Save and resize
+        file.save(filepath)
+        try:
+            img = Image.open(filepath)
+            max_size = 1920
+            if img.width > max_size or img.height > max_size:
+                img.thumbnail((max_size, max_size), Image.Resampling.LANCZOS)
+                img.save(filepath, optimize=True, quality=85)
+        except Exception as e:
+            print(f"Image processing warning: {e}")
+            
+        image_url = f"/uploads/gallery/{filename}"
+        
+        # Create submission
+        submission = GallerySubmission(
+            user_id=current_user.id,
+            image_url=image_url,
+            location=data.get('location'),
+            caption=data.get('caption'),
+            products_featured=data.get('products_featured'),
+            rating=int(data.get('rating', 5)),
+            is_approved=False # Requires admin approval
+        )
+        
+        db.session.add(submission)
+        db.session.commit()
+        
+        return jsonify({
+            'message': 'Submission received! It will be live after moderation.',
+            'submission': submission.to_dict()
+        }), 201
+        
+    return jsonify({"error": "Invalid file type"}), 400
+
+@app.route('/api/gallery/<int:id>/like', methods=['POST'])
+@token_required
+def like_gallery_submission(current_user, id):
+    submission = GallerySubmission.query.get_or_404(id)
+    submission.likes += 1
+    db.session.commit()
+    return jsonify({'likes': submission.likes})
+
+# Admin Routes for Gallery
+@app.route('/api/admin/gallery/pending', methods=['GET'])
+@token_required
+def get_pending_submissions(current_user):
+    if not current_user.is_super_user:
+        return jsonify({'error': 'Admin access required'}), 403
+        
+    submissions = GallerySubmission.query.filter_by(is_approved=False).order_by(GallerySubmission.created_at.asc()).all()
+    return jsonify([s.to_dict() for s in submissions])
+
+@app.route('/api/admin/gallery/<int:id>/approve', methods=['POST'])
+@token_required
+def approve_submission(current_user, id):
+    if not current_user.is_super_user:
+        return jsonify({'error': 'Admin access required'}), 403
+        
+    submission = GallerySubmission.query.get_or_404(id)
+    submission.is_approved = True
+    
+    # Check if should be featured
+    if request.json and request.json.get('featured'):
+        submission.is_featured = True
+        
+    db.session.commit()
+    return jsonify({'message': 'Submission approved', 'submission': submission.to_dict()})
+
+@app.route('/api/admin/gallery/<int:id>', methods=['DELETE'])
+@token_required
+def delete_submission(current_user, id):
+    if not current_user.is_super_user:
+        return jsonify({'error': 'Admin access required'}), 403
+        
+    submission = GallerySubmission.query.get_or_404(id)
+    
+    # Delete image file
+    if submission.image_url:
+        try:
+            # Construct path from URL
+            # URL is /uploads/gallery/filename
+            filename = submission.image_url.split('/')[-1]
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], '..', 'gallery', filename)
+            if os.path.exists(filepath):
+                os.remove(filepath)
+        except Exception as e:
+            print(f"Error deleting file: {e}")
+            
+    db.session.delete(submission)
+    db.session.commit()
+    return jsonify({'message': 'Submission deleted'})
+
+@app.route('/uploads/gallery/<filename>')
+def uploaded_gallery_file(filename):
+    gallery_folder = os.path.join(app.config['UPLOAD_FOLDER'], '..', 'gallery')
+    return send_from_directory(gallery_folder, filename)
 
 @app.route('/api/oracle', methods=['POST'])
 def oracle_chat():

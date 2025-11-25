@@ -42,6 +42,7 @@ const UploadModal = ({ isOpen, onClose, onUpload }) => {
         data.append('location', formData.location);
         data.append('caption', formData.caption);
         data.append('products_featured', formData.products_featured);
+        data.append('rating', formData.rating || 5);
 
         try {
             await onUpload(data);
@@ -114,6 +115,31 @@ const UploadModal = ({ isOpen, onClose, onUpload }) => {
                             placeholder="Tell us about your setup..."
                             required
                         />
+                    </div>
+
+                    <div>
+                        <label className="block text-xs font-mono text-gray-400 mb-1">RATING</label>
+                        <div className="flex space-x-1">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                                <button
+                                    key={star}
+                                    type="button"
+                                    onClick={() => setFormData({ ...formData, rating: star })}
+                                    className="focus:outline-none transition-transform hover:scale-110"
+                                >
+                                    <svg
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                        fill={star <= (formData.rating || 5) ? "white" : "none"}
+                                        stroke="white"
+                                        strokeWidth="2"
+                                    >
+                                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                                    </svg>
+                                </button>
+                            ))}
+                        </div>
                     </div>
 
                     {error && (

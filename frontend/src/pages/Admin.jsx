@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Trash2, Edit2, Upload, X, Check } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Admin = () => {
+    const { user } = useAuth();
+    const navigate = useNavigate();
     const [products, setProducts] = useState([]);
     const [editingId, setEditingId] = useState(null);
     const [imageFile, setImageFile] = useState(null);
@@ -12,10 +16,14 @@ const Admin = () => {
         title: '', subtitle: '', price: '', category: 'F1', image_pattern: 'pattern-1', image_url: ''
     });
 
-    // Fetch all products on mount
+    // Check auth and fetch products
     useEffect(() => {
+        if (!user || !user.is_super_user) {
+            navigate('/');
+            return;
+        }
         fetchProducts();
-    }, []);
+    }, [user, navigate]);
 
     const fetchProducts = () => {
         fetch('http://localhost:5000/api/products')

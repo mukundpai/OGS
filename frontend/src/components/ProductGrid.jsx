@@ -66,7 +66,15 @@ const ProductGrid = ({ addToCart }) => {
                                 <div className={product.image_pattern}></div>
                             )}
                             <div className="product-overlay">
-                                <span className="add-btn">View Details</span>
+                                <button
+                                    className="add-btn"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        addToCart(product);
+                                    }}
+                                >
+                                    Add to Cart
+                                </button>
                             </div>
                             {product.badge && (
                                 <div style={{

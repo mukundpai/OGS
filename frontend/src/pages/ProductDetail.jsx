@@ -123,7 +123,10 @@ const ProductDetail = ({ addToCart }) => {
 
                     {/* Actions */}
                     <div className="flex flex-col gap-3 mb-8">
-                        <button onClick={addToCart} className="w-full bg-white hover:bg-gray-200 text-black font-bold py-3 uppercase tracking-wider flex items-center justify-center gap-2 transition-colors text-sm">
+                        <button
+                            onClick={() => addToCart({ ...product, size, frame: frameType })}
+                            className="w-full bg-white hover:bg-gray-200 text-black font-bold py-3 uppercase tracking-wider flex items-center justify-center gap-2 transition-colors text-sm"
+                        >
                             <ShoppingCart size={18} />
                             Add to Cart
                         </button>
