@@ -1,0 +1,152 @@
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
+import GalleryCard from '../components/GalleryCard';
+import UploadModal from '../components/UploadModal';
+import { Plus, Filter, Loader } from 'lucide-react';
+
+const Gallery = () => {
+    const { user, token } = useAuth();
+    const [submissions, setSubmissions] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [showUploadModal, setShowUploadModal] = useState(false);
+    const [filter, setFilter] = useState('newest'); // newest, popular, featured
+    const [uploadStatus, setUploadStatus] = useState(null); // success, error
+
+    useEffect(() => {
+        fetchGallery();
+    }, [filter]);
+
+    const fetchGallery = async () => {
+        setLoading(true);
+        try {
+            const res = await fetch(`http://localhost:5000/api/gallery?sort=${filter}`);
+            const data = await res.json();
+            setSubmissions(data.submissions || []);
+        } catch (err) {
+            console.error("Error fetching gallery:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleUpload = async (formData) => {
+        if (!token) {
+            throw new Error("Please login to upload");
+        }
+
+        const res = await fetch('http://localhost:5000/api/gallery/upload', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            body: formData
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            throw new Error(data.error || "Upload failed");
+        }
+
+        setUploadStatus('success');
+        setTimeout(() => setUploadStatus(null), 5000);
+    };
+
+    const handleLike = async (id) => {
+        if (!token) return; // Silent fail if not logged in, or show toast
+
+        try {
+            await fetch(`http://localhost:5000/api/gallery/${id}/like`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+        } catch (err) {
+            console.error("Error liking submission:", err);
+        }
+    };
+
+    return (
+        <div className="min-h-screen pt-24 pb-20">
+            {/* Hero Section */}
+            <div className="container mx-auto px-6 mb-16 text-center">
+                <p className="font-mono text-gray-400 text-xs tracking-widest mb-4">COMMUNITY SHOWCASE</p>
+                <h1 className="text-5xl md:text-7xl font-black tracking-tighter mb-6">THE EXHIBIT</h1>
+                <p className="text-gray-400 max-w-2xl mx-auto mb-8 font-light">
+                    See how our community brings culture to their spaces.
+                    Verified customers can share their setups to be featured.
+                </p>
+
+                <button
+                    onClick={() => setShowUploadModal(true)}
+                    className="bg-white text-black px-8 py-3 font-bold hover:bg-gray-200 transition-colors inline-flex items-center space-x-2"
+                >
+                    <Plus size={18} />
+                    <span>UPLOAD YOUR WALL</span>
+                </button>
+            </div>
+
+            {/* Filter Bar */}
+            <div className="container mx-auto px-6 mb-8 flex justify-center space-x-6 border-b border-white/10 pb-4">
+                <button
+                    onClick={() => setFilter('newest')}
+                    className={`text-sm font-mono transition-colors ${filter === 'newest' ? 'text-white border-b border-white pb-4 -mb-4.5' : 'text-gray-500 hover:text-white'}`}
+                >
+                    NEWEST
+                </button>
+                <button
+                    onClick={() => setFilter('popular')}
+                    className={`text-sm font-mono transition-colors ${filter === 'popular' ? 'text-white border-b border-white pb-4 -mb-4.5' : 'text-gray-500 hover:text-white'}`}
+                >
+                    POPULAR
+                </button>
+                <button
+                    onClick={() => setFilter('featured')}
+                    className={`text-sm font-mono transition-colors ${filter === 'featured' ? 'text-white border-b border-white pb-4 -mb-4.5' : 'text-gray-500 hover:text-white'}`}
+                >
+                    FEATURED
+                </button>
+            </div>
+
+            {/* Gallery Grid */}
+            <div className="container mx-auto px-6">
+                {loading ? (
+                    <div className="flex justify-center items-center h-64">
+                        <Loader className="animate-spin text-gray-500" />
+                    </div>
+                ) : submissions.length > 0 ? (
+                    <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+                        {submissions.map(sub => (
+                            <GalleryCard
+                                key={sub.id}
+                                submission={sub}
+                                onLike={handleLike}
+                            />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="text-center py-20 border border-dashed border-white/10 rounded-lg">
+                        <p className="text-gray-500 font-mono">No submissions yet. Be the first!</p>
+                    </div>
+                )}
+            </div>
+
+            {/* Upload Modal */}
+            <UploadModal
+                isOpen={showUploadModal}
+                onClose={() => setShowUploadModal(false)}
+                onUpload={handleUpload}
+            />
+
+            {/* Success Toast */}
+            {uploadStatus === 'success' && (
+                <div className="fixed bottom-8 right-8 bg-green-500 text-black px-6 py-4 font-mono text-sm font-bold animate-in slide-in-from-bottom duration-300 z-50">
+                    SUBMISSION RECEIVED! PENDING APPROVAL.
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default Gallery;

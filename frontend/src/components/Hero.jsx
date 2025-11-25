@@ -80,9 +80,6 @@ const Hero = () => {
                     <button onClick={() => document.getElementById('collection').scrollIntoView({ behavior: 'smooth' })} className="cta-btn">
                         SHOP THE DROP <ArrowRight width={16} />
                     </button>
-                    <button className="font-mono text-xs uppercase" style={{ border: '1px solid rgba(255,255,255,0.3)', padding: '1rem 2rem', transition: 'background 0.3s' }} onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}>
-                        VIEW_FRAMES.MP4
-                    </button>
                 </div>
             </div>
 

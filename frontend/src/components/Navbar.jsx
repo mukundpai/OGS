@@ -14,8 +14,8 @@ const Navbar = ({ cartCount }) => {
 
                 <div className="nav-links hidden-mobile">
                     <Link to="/shop">[ The Wall ]</Link>
+                    <Link to="/gallery">[ The Exhibit ]</Link>
                     <a href="/#oracle">[ The Oracle ]</a>
-                    <a href="/#about">[ Manifesto ]</a>
                 </div>
 
                 <button className="relative" onClick={() => navigate('/checkout')}>
