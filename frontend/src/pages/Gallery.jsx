@@ -19,7 +19,7 @@ const Gallery = () => {
     const fetchGallery = async () => {
         setLoading(true);
         try {
-            const res = await fetch(`http://localhost:5000/api/gallery?sort=${filter}`);
+            const res = await fetch(`/api/gallery?sort=${filter}`);
             const data = await res.json();
             setSubmissions(data.submissions || []);
         } catch (err) {
@@ -34,7 +34,7 @@ const Gallery = () => {
             throw new Error("Please login to upload");
         }
 
-        const res = await fetch('http://localhost:5000/api/gallery/upload', {
+        const res = await fetch('/api/gallery/upload', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -56,7 +56,7 @@ const Gallery = () => {
         if (!token) return; // Silent fail if not logged in, or show toast
 
         try {
-            await fetch(`http://localhost:5000/api/gallery/${id}/like`, {
+            await fetch(`/api/gallery/${id}/like`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`

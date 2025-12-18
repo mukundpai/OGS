@@ -41,7 +41,7 @@ const Cart = ({ cartItems, updateQuantity, removeFromCart }) => {
                                 <div className="flex-shrink-0 relative overflow-hidden bg-gray-900" style={{ width: '100px', height: '130px' }}>
                                     {item.image_url ? (
                                         <img
-                                            src={`http://localhost:5000${item.image_url}`}
+                                            src={item.image_url}
                                             alt={item.title}
                                             className="w-full h-full object-cover"
                                         />

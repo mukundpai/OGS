@@ -40,7 +40,7 @@ const Checkout = ({ cartItems, clearCart }) => {
 
         // Simulate payment processing
         setTimeout(() => {
-            fetch('http://localhost:5000/api/checkout', {
+            fetch('/api/checkout', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -261,7 +261,7 @@ const Checkout = ({ cartItems, clearCart }) => {
                                     <div className="w-16 h-20 bg-gray-200 flex-shrink-0 relative overflow-hidden">
                                         {item.image_url ? (
                                             <img
-                                                src={`http://localhost:5000${item.image_url}`}
+                                                src={item.image_url}
                                                 alt={item.title}
                                                 className="w-full h-full object-cover"
                                             />

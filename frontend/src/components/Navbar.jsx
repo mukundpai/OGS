@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { ShoppingBag, User, LogOut } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const Navbar = ({ cartCount }) => {
     const navigate = useNavigate();
+    const location = useLocation();
     const { user, logout } = useAuth();
     const [showUserMenu, setShowUserMenu] = useState(false);
 
@@ -14,6 +15,8 @@ const Navbar = ({ cartCount }) => {
         navigate('/');
     };
 
+    const isActive = (path) => location.pathname === path;
+
     return (
         <nav className="navbar">
             <div className="container flex justify-between items-center w-full">
@@ -22,12 +25,16 @@ const Navbar = ({ cartCount }) => {
                 </Link>
 
                 <div className="nav-links hidden-mobile">
-                    <Link to="/shop">[ The Wall ]</Link>
-                    <Link to="/gallery">[ The Exhibit ]</Link>
-                    <a href="/#oracle">[ The Oracle ]</a>
+                    <Link to="/shop" className={isActive('/shop') ? 'text-white' : ''}>
+                        [ THE WALL ]
+                    </Link>
+                    <Link to="/gallery" className={isActive('/gallery') ? 'text-white' : ''}>
+                        [ THE EXHIBIT ]
+                    </Link>
+                    <a href="/#oracle">[ THE ORACLE ]</a>
                 </div>
 
-                <div className="flex items-center space-x-6">
+                <div className="flex items-center gap-8">
                     <button className="relative" onClick={() => navigate('/cart')}>
                         <ShoppingBag width={24} height={24} />
                         <span id="cart-count" style={{
@@ -60,25 +67,28 @@ const Navbar = ({ cartCount }) => {
                         {/* Dropdown */}
                         {showUserMenu && (
                             <div
-                                className="absolute right-0 top-full mt-2 w-48 bg-black border border-white/20 shadow-xl z-50 py-2"
+                                className="absolute top-full mt-2 bg-black border border-white/20 shadow-xl z-50 py-2"
+                                style={{ width: '300px', right: '0' }}
                                 onMouseLeave={() => setShowUserMenu(false)}
                             >
                                 {user ? (
                                     <>
-                                        <div className="px-4 py-2 border-b border-white/10 mb-2">
-                                            <p className="text-[10px] text-gray-500 font-mono">SIGNED IN AS</p>
-                                            <p className="text-xs font-bold truncate">{user.full_name}</p>
+                                        <div className="px-6 py-3 border-b border-white/10 mb-2">
+                                            <p className="text-xs text-gray-500 font-mono mb-1">SIGNED IN AS</p>
+                                            <p className="text-sm font-bold truncate">{user.full_name}</p>
                                         </div>
-                                        <Link
-                                            to="/profile"
-                                            className="block px-4 py-2 text-sm hover:bg-white/10 font-mono"
-                                            onClick={() => setShowUserMenu(false)}
-                                        >
-                                            PROFILE
-                                        </Link>
+                                        <div className="px-6 py-2">
+                                            <Link
+                                                to="/profile"
+                                                className="block w-full py-3 text-center border border-white text-white font-bold font-mono text-sm hover:bg-white hover:text-black transition-all duration-300"
+                                                onClick={() => setShowUserMenu(false)}
+                                            >
+                                                PROFILE
+                                            </Link>
+                                        </div>
                                         <button
                                             onClick={handleLogout}
-                                            className="w-full text-left px-4 py-2 text-sm hover:bg-white/10 font-mono text-red-500"
+                                            className="w-full text-left px-6 py-3 text-base hover:bg-white/10 font-mono text-red-500"
                                         >
                                             LOGOUT
                                         </button>
@@ -87,14 +97,14 @@ const Navbar = ({ cartCount }) => {
                                     <>
                                         <Link
                                             to="/login"
-                                            className="block px-4 py-2 text-sm hover:bg-white/10 font-mono"
+                                            className="block px-6 py-3 text-base hover:bg-white/10 font-mono"
                                             onClick={() => setShowUserMenu(false)}
                                         >
                                             LOGIN
                                         </Link>
                                         <Link
                                             to="/signup"
-                                            className="block px-4 py-2 text-sm hover:bg-white/10 font-mono"
+                                            className="block px-6 py-3 text-base hover:bg-white/10 font-mono"
                                             onClick={() => setShowUserMenu(false)}
                                         >
                                             SIGNUP

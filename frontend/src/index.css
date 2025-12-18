@@ -389,7 +389,8 @@ button {
   transition: color 0.3s;
 }
 
-.nav-links a:hover {
+.nav-links a:hover,
+.nav-links a.text-white {
   color: #fff;
 }
 
@@ -923,4 +924,12 @@ footer {
 .text-xxs {
   font-size: 0.625rem;
   line-height: 0.75rem;
+}
+
+.bg-black {
+  background-color: #000;
+}
+
+.p-2 {
+  padding: 0.5rem;
 }

@@ -7,7 +7,7 @@ const ProductGrid = ({ addToCart }) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch('http://localhost:5000/api/products')
+        fetch('/api/products')
             .then(res => res.json())
             .then(data => {
                 // Filter products with badges (featured/best products) and limit to 8
@@ -57,7 +57,7 @@ const ProductGrid = ({ addToCart }) => {
                         <div
                             className="product-image"
                             style={product.image_url ? {
-                                backgroundImage: `url(http://localhost:5000${product.image_url})`,
+                                backgroundImage: `url(${product.image_url})`,
                                 backgroundSize: 'cover',
                                 backgroundPosition: 'center'
                             } : {}}

@@ -5,6 +5,21 @@ const Oracle = () => {
     const [output, setOutput] = useState('');
     const [loading, setLoading] = useState(false);
 
+    const typeWriterEffect = (text) => {
+        let i = 0;
+        const speed = 20;
+        setOutput('');
+
+        function type() {
+            if (i < text.length) {
+                setOutput(prev => prev + text.charAt(i));
+                i++;
+                setTimeout(type, speed);
+            }
+        }
+        type();
+    };
+
     const askOracle = async () => {
         if (!input.trim()) return;
 
@@ -12,7 +27,7 @@ const Oracle = () => {
         setOutput(''); // Clear previous output
 
         try {
-            const res = await fetch('http://localhost:5000/api/oracle', {
+            const res = await fetch('/api/oracle', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ query: input })
@@ -31,21 +46,6 @@ const Oracle = () => {
         } finally {
             setLoading(false);
         }
-    };
-
-    const typeWriterEffect = (text) => {
-        let i = 0;
-        const speed = 20;
-        setOutput('');
-
-        function type() {
-            if (i < text.length) {
-                setOutput(prev => prev + text.charAt(i));
-                i++;
-                setTimeout(type, speed);
-            }
-        }
-        type();
     };
 
     return (

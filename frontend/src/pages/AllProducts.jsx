@@ -7,7 +7,7 @@ const AllProducts = () => {
     const [sort, setSort] = useState('default');
 
     useEffect(() => {
-        let url = 'http://localhost:5000/api/products?';
+        let url = '/api/products?';
         if (category !== 'All') url += `category=${category}&`;
         if (sort !== 'default') url += `sort=${sort}`;
 

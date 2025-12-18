@@ -13,12 +13,12 @@ const ProductDetail = ({ addToCart }) => {
     const [size, setSize] = useState('A3');
 
     useEffect(() => {
-        fetch(`http://localhost:5000/api/products/${id}`)
+        fetch(`/api/products/${id}`)
             .then(res => res.json())
             .then(data => setProduct(data));
 
         // Fetch related products (mock logic: just fetch all and take first 4)
-        fetch('http://localhost:5000/api/products')
+        fetch('/api/products')
             .then(res => res.json())
             .then(data => setRelatedProducts(data.slice(0, 4)));
     }, [id]);
@@ -90,7 +90,7 @@ const ProductDetail = ({ addToCart }) => {
                         <div className={`product-image ${product.image_pattern}`} style={{
                             width: '100%',
                             aspectRatio: '1/1.414',
-                            backgroundImage: product.image_url ? `url(http://localhost:5000${product.image_url})` : 'none',
+                            backgroundImage: product.image_url ? `url(${product.image_url})` : 'none',
                             backgroundSize: 'cover',
                             backgroundPosition: 'center',
                             boxShadow: 'inset 0 0 20px rgba(0,0,0,0.2)',

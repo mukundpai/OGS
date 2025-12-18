@@ -18,7 +18,7 @@ const GalleryCard = ({ submission, onLike }) => {
         <div className="gallery-card mb-6 break-inside-avoid relative group cursor-pointer">
             <div className="relative overflow-hidden rounded-sm mb-4">
                 <img
-                    src={`http://localhost:5000${submission.image_url}`}
+                    src={submission.image_url}
                     alt={submission.caption}
                     className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-105"
                     loading="lazy"

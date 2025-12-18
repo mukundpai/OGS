@@ -6,7 +6,7 @@ const Hero = () => {
 
     useEffect(() => {
         // Fetch products and select 4 random ones for floating display
-        fetch('http://localhost:5000/api/products')
+        fetch('/api/products')
             .then(res => res.json())
             .then(data => {
                 // Shuffle and pick 4 random products
@@ -36,25 +36,25 @@ const Hero = () => {
                 {floatingProducts.length >= 4 && (
                     <>
                         <img
-                            src={floatingProducts[0].image_url ? `http://localhost:5000${floatingProducts[0].image_url}` : 'https://images.unsplash.com/photo-1600199850220-0829609b680d?q=80&w=200&auto=format&fit=crop'}
+                            src={floatingProducts[0].image_url || 'https://images.unsplash.com/photo-1600199850220-0829609b680d?q=80&w=200&auto=format&fit=crop'}
                             alt={floatingProducts[0].title}
                             className="float-item"
                             style={{ width: '200px', height: '300px', top: '15%', left: '10%', animation: 'float-1 8s ease-in-out infinite', objectFit: 'cover' }}
                         />
                         <img
-                            src={floatingProducts[1].image_url ? `http://localhost:5000${floatingProducts[1].image_url}` : 'https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=180&auto=format&fit=crop'}
+                            src={floatingProducts[1].image_url || 'https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=180&auto=format&fit=crop'}
                             alt={floatingProducts[1].title}
                             className="float-item"
                             style={{ width: '180px', height: '260px', top: '10%', right: '8%', animation: 'float-2 7s ease-in-out infinite', objectFit: 'cover' }}
                         />
                         <img
-                            src={floatingProducts[2].image_url ? `http://localhost:5000${floatingProducts[2].image_url}` : 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=150&auto=format&fit=crop'}
+                            src={floatingProducts[2].image_url || 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=150&auto=format&fit=crop'}
                             alt={floatingProducts[2].title}
                             className="float-item"
                             style={{ width: '150px', height: '220px', bottom: '15%', left: '25%', animation: 'float-3 9s ease-in-out infinite', objectFit: 'cover' }}
                         />
                         <img
-                            src={floatingProducts[3].image_url ? `http://localhost:5000${floatingProducts[3].image_url}` : 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?q=80&w=160&auto=format&fit=crop'}
+                            src={floatingProducts[3].image_url || 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?q=80&w=160&auto=format&fit=crop'}
                             alt={floatingProducts[3].title}
                             className="float-item"
                             style={{ width: '170px', height: '250px', bottom: '8%', right: '12%', animation: 'float-1 10s ease-in-out infinite', objectFit: 'cover' }}

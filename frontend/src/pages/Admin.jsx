@@ -26,7 +26,7 @@ const Admin = () => {
     }, [user, navigate]);
 
     const fetchProducts = () => {
-        fetch('http://localhost:5000/api/products')
+        fetch('/api/products')
             .then(res => res.json())
             .then(data => setProducts(data));
     };
@@ -52,7 +52,7 @@ const Admin = () => {
         formDataUpload.append('image', imageFile);
 
         try {
-            const response = await fetch('http://localhost:5000/api/products/upload', {
+            const response = await fetch('/api/products/upload', {
                 method: 'POST',
                 body: formDataUpload
             });
@@ -83,7 +83,7 @@ const Admin = () => {
 
         if (editingId) {
             // Update existing product
-            fetch(`http://localhost:5000/api/products/${editingId}`, {
+            fetch(`/api/products/${editingId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(productData)
@@ -96,7 +96,7 @@ const Admin = () => {
                 });
         } else {
             // Create new product
-            fetch('http://localhost:5000/api/products', {
+            fetch('/api/products', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(productData)
@@ -120,14 +120,14 @@ const Admin = () => {
             image_pattern: product.image_pattern,
             image_url: product.image_url || ''
         });
-        setImagePreview(product.image_url ? `http://localhost:5000${product.image_url}` : null);
+        setImagePreview(product.image_url || null);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const handleDelete = (id) => {
         if (!confirm('Are you sure you want to delete this product?')) return;
 
-        fetch(`http://localhost:5000/api/products/${id}`, {
+        fetch(`/api/products/${id}`, {
             method: 'DELETE'
         })
             .then(() => {
@@ -288,7 +288,7 @@ const Admin = () => {
                             <div
                                 className={`w-24 h-24 flex-shrink-0 ${product.image_pattern}`}
                                 style={{
-                                    backgroundImage: product.image_url ? `url(http://localhost:5000${product.image_url})` : 'none',
+                                    backgroundImage: product.image_url ? `url(${product.image_url})` : 'none',
                                     backgroundSize: 'cover',
                                     backgroundPosition: 'center',
                                     border: '1px solid #333'
