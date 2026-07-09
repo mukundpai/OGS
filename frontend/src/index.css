@@ -608,6 +608,105 @@ button {
   }
 }
 
+/* Custom Oracle Coming Soon UI */
+.blink-text {
+  animation: pulse-blink 1.5s infinite;
+}
+
+@keyframes pulse-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.text-yellow {
+  color: #ffc837;
+}
+
+.text-glow {
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.15);
+}
+
+.system-tag {
+  display: inline-block;
+  background: rgba(255, 200, 55, 0.1);
+  color: #ffc837;
+  border: 1px solid rgba(255, 200, 55, 0.2);
+  padding: 4px 8px;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  font-weight: bold;
+}
+
+.calibration-box {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid #1a1a1a;
+  padding: 1.5rem;
+}
+
+.progress-bar-bg {
+  background: #111;
+  height: 6px;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar-fill {
+  background: linear-gradient(90deg, #ffc837, #ff8008);
+  height: 100%;
+  transition: width 0.8s ease-in-out;
+  box-shadow: 0 0 8px #ff8008;
+  position: relative;
+}
+
+.progress-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: progress-shimmer 2s infinite;
+}
+
+@keyframes progress-shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.text-xxs {
+  font-size: 0.65rem;
+}
+
+.oracle-btn-secondary {
+  border: 1px solid #444;
+  color: #888;
+  padding: 0.6rem 1.2rem;
+  transition: all 0.2s;
+  text-transform: uppercase;
+}
+
+.oracle-btn-secondary:hover {
+  border-color: #fff;
+  color: #fff;
+}
+
+.glow-button {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+}
+
+.glow-button:hover {
+  box-shadow: 0 0 20px rgba(255, 200, 55, 0.2);
+}
+
 /* Footer */
 footer {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
