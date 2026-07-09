@@ -124,6 +124,20 @@ with app.app_context():
     if Product.query.count() == 0:
         seed_products()
 
+    # Seed default admin if not exists
+    admin_email = 'admin@oglabs.com'
+    if not User.query.filter_by(email=admin_email).first():
+        admin = User(
+            email=admin_email,
+            full_name='OG Admin',
+            is_super_user=True
+        )
+        admin.set_password('adminpassword2024')
+        db.session.add(admin)
+        db.session.commit()
+        print("Admin user seeded successfully!")
+
+
 
 # Authentication Routes
 @app.route('/api/auth/signup', methods=['POST'])

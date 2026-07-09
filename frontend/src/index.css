@@ -459,21 +459,36 @@ button {
 
 .grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
 }
 
 @media (min-width: 768px) {
   .grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
   }
 }
 
 @media (min-width: 1024px) {
   .grid {
     grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
   }
 }
+
+@media (max-width: 767px) {
+  .product-card h3 {
+    font-size: 0.85rem;
+  }
+  .product-card span {
+    font-size: 0.85rem;
+  }
+  .section {
+    padding: 3rem 0;
+  }
+}
+
 
 .product-card {
   cursor: pointer;
