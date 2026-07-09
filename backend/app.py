@@ -14,7 +14,13 @@ app = Flask(__name__)
 CORS(app)
 
 # Database Config
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///oglabs.db'
+database_url = os.environ.get('DATABASE_URL')
+if database_url:
+    if database_url.startswith('postgres://'):
+        database_url = database_url.replace('postgres://', 'postgresql://', 1)
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///oglabs.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
 
@@ -86,8 +92,7 @@ def token_required(f):
 # Placeholder for API Key
 # os.environ["GEMINI_API_KEY"] = "YOUR_API_KEY"
 
-@app.before_first_request
-def create_tables():
+with app.app_context():
     db.create_all()
     if Product.query.count() == 0:
         seed_products()
@@ -538,6 +543,14 @@ def generate_gemini_content(api_key, prompt, system_instruction=None):
     except Exception as e:
         print(f"Error calling Gemini API: {e}")
         return None
+# Serve static files and fallback to React index.html for client-side routing
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
+    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
