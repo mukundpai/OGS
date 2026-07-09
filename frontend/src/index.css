@@ -1165,7 +1165,29 @@ footer {
     right: 1rem;
   }
   .oracle-input {
-    font-size: 0.9rem !important;
-    padding: 0.5rem 0 !important;
+    font-size: 0.8rem !important;
+    padding: 0.75rem 0 !important;
+  }
+  .terminal-window {
+    padding: 1.25rem !important;
+  }
+  .terminal-header {
+    flex-direction: column !important;
+    gap: 0.25rem !important;
+    align-items: flex-start !important;
+    margin-bottom: 1.5rem !important;
+  }
+  .waitlist-form .flex {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 1rem !important;
+  }
+  .waitlist-form .oracle-btn {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+  .waitlist-form span.text-gray {
+    text-align: center !important;
+    width: 100% !important;
   }
 }
