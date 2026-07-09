@@ -20,5 +20,6 @@ COPY --from=frontend-builder /frontend/dist ./static
 EXPOSE 5000
 ENV FLASK_ENV=production
 
-# Run with gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "2", "app:app"]
+# Run with gunicorn, dynamically binding to the PORT environment variable (default 5000)
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${PORT:-5000} --workers 2 app:app"]
+
