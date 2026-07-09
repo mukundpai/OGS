@@ -32,8 +32,9 @@ const Hero = () => {
                 </svg>
             </div>
 
-            <div className="floating-container hidden-mobile">
+            <div className="floating-container">
                 {floatingProducts.length >= 4 && (
+
                     <>
                         <img
                             src={floatingProducts[0].image_url || 'https://images.unsplash.com/photo-1600199850220-0829609b680d?q=80&w=200&auto=format&fit=crop'}

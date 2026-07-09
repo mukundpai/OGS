@@ -287,7 +287,8 @@ const Admin = () => {
                     {products.map(product => (
                         <div
                             key={product.id}
-                            className="flex gap-4 p-4 border border-gray-800 hover:border-gray-600 transition-colors"
+                            className="admin-product-card flex gap-4 p-4 border border-gray-800 hover:border-gray-600 transition-colors"
+
                             style={{ background: '#0a0a0a' }}
                         >
                             {/* Product Image */}

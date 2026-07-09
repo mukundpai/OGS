@@ -24,8 +24,9 @@ const Navbar = ({ cartCount }) => {
                     OG LABS<span style={{ fontSize: '0.5em', verticalAlign: 'top', opacity: 0.5 }}>®</span>
                 </Link>
 
-                <div className="nav-links hidden-mobile">
+                <div className="nav-links">
                     <Link to="/shop" className={isActive('/shop') ? 'text-white' : ''}>
+
                         [ THE WALL ]
                     </Link>
                     <Link to="/gallery" className={isActive('/gallery') ? 'text-white' : ''}>

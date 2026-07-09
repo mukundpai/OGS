@@ -1047,3 +1047,115 @@ footer {
 .p-2 {
   padding: 0.5rem;
 }
+
+/* Premium Mobile Responsiveness Overrides */
+@media (max-width: 767px) {
+  /* Dynamic Taller Navbar on Mobile to prevent overlap and look clean */
+  .navbar {
+    height: auto !important;
+    min-height: 80px;
+    padding: 12px 0 !important;
+  }
+  .navbar .container {
+    flex-wrap: wrap !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 0 16px !important;
+    gap: 8px !important;
+  }
+  .nav-links {
+    order: 3;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 6px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 10px;
+  }
+  .nav-links a {
+    margin-left: 0 !important;
+    font-size: 0.65rem !important;
+  }
+  
+  /* Hero Section Mobile Padding & Floating Watermarks to solve "blankness" */
+  .hero {
+    height: 100vh !important;
+    padding-top: 80px !important;
+  }
+  .float-item {
+    opacity: 0.12 !important; /* Low watermark opacity on mobile */
+    filter: grayscale(1) !important;
+    pointer-events: none;
+  }
+  /* Arrange 2 floating items on mobile as background watermark */
+  .float-item:nth-child(1) {
+    width: 100px !important;
+    height: 150px !important;
+    top: 12% !important;
+    left: 8% !important;
+  }
+  .float-item:nth-child(2) {
+    width: 90px !important;
+    height: 130px !important;
+    top: 10% !important;
+    right: 8% !important;
+  }
+  .float-item:nth-child(3),
+  .float-item:nth-child(4) {
+    display: none !important; /* Hide other 2 to keep it neat */
+  }
+  
+  /* Product Cards Spacing & Layout */
+  .grid {
+    gap: 1.25rem 0.75rem !important; /* Proper vertical and horizontal gap */
+    padding: 0 8px;
+  }
+  .product-card {
+    margin-bottom: 0.5rem;
+  }
+  .product-image {
+    margin-bottom: 0.5rem !important;
+  }
+  .product-card h3 {
+    font-size: 0.8rem !important;
+    line-height: 1.2;
+    margin-top: 0.25rem;
+  }
+  .product-card span {
+    font-size: 0.8rem !important;
+  }
+  .product-card p {
+    font-size: 0.6rem !important;
+    margin-top: 0.15rem;
+  }
+  
+  /* Section Padding */
+  .section {
+    padding: 2.5rem 0 !important;
+  }
+  .section h2 {
+    font-size: 2rem !important;
+  }
+  
+  /* Admin Panel Mobile Spacing & Spacing fixes */
+  .container.section {
+    padding-top: 140px !important;
+  }
+  .admin-product-card {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.75rem !important;
+    position: relative;
+    padding-bottom: 3.5rem !important; /* Make space for action buttons at bottom */
+  }
+  .admin-product-card div:last-child {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+  }
+  .oracle-input {
+    font-size: 0.9rem !important;
+    padding: 0.5rem 0 !important;
+  }
+}
