@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const Admin = () => {
-    const { user } = useAuth();
+    const { user, loading } = useAuth();
     const navigate = useNavigate();
     const [products, setProducts] = useState([]);
     const [editingId, setEditingId] = useState(null);
@@ -18,12 +18,14 @@ const Admin = () => {
 
     // Check auth and fetch products
     useEffect(() => {
+        if (loading) return; // Wait for authentication check to complete
         if (!user || !user.is_super_user) {
             navigate('/');
             return;
         }
         fetchProducts();
-    }, [user, navigate]);
+    }, [user, loading, navigate]);
+
 
     const fetchProducts = () => {
         fetch('/api/products')
@@ -144,6 +146,10 @@ const Admin = () => {
         setImageFile(null);
         setImagePreview(null);
     };
+
+    if (loading) {
+        return <div className="container section text-center font-mono text-xs text-gray" style={{ paddingTop: '160px' }}>AUTHENTICATING ACCESS TERMINAL...</div>;
+    }
 
     return (
         <div className="container section" style={{ paddingTop: '120px', maxWidth: '1200px' }}>
