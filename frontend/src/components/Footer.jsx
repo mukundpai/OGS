@@ -20,7 +20,6 @@ const Footer = () => {
                             <li className="text-gray font-mono text-xs mb-2">SOCIAL</li>
                             <li><a href="#">INSTAGRAM</a></li>
                             <li><a href="#">PINTEREST</a></li>
-                            <li><a href="#">TIKTOK</a></li>
                         </ul>
                     </div>
                 </div>
