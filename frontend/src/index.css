@@ -1088,22 +1088,32 @@ footer {
     filter: grayscale(1) !important;
     pointer-events: none;
   }
-  /* Arrange 2 floating items on mobile as background watermark */
+  /* Arrange all 4 floating items on mobile as background watermarks */
   .float-item:nth-child(1) {
-    width: 100px !important;
-    height: 150px !important;
-    top: 12% !important;
-    left: 8% !important;
+    width: 90px !important;
+    height: 135px !important;
+    top: 22% !important;
+    left: 6% !important;
   }
   .float-item:nth-child(2) {
+    width: 85px !important;
+    height: 120px !important;
+    top: 20% !important;
+    right: 6% !important;
+  }
+  .float-item:nth-child(3) {
     width: 90px !important;
     height: 130px !important;
-    top: 10% !important;
-    right: 8% !important;
+    bottom: 18% !important;
+    left: 8% !important;
+    display: block !important;
   }
-  .float-item:nth-child(3),
   .float-item:nth-child(4) {
-    display: none !important; /* Hide other 2 to keep it neat */
+    width: 85px !important;
+    height: 125px !important;
+    bottom: 15% !important;
+    right: 8% !important;
+    display: block !important;
   }
   
   /* Product Cards Spacing & Layout */
