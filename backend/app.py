@@ -92,11 +92,6 @@ def token_required(f):
 # Placeholder for API Key
 # os.environ["GEMINI_API_KEY"] = "YOUR_API_KEY"
 
-with app.app_context():
-    db.create_all()
-    if Product.query.count() == 0:
-        seed_products()
-
 def seed_products():
     products = [
         Product(title="GRAND PRIX '24", subtitle="A3 MATTE POSTER", price=25, image_pattern="pattern-1", image_url="https://images.unsplash.com/photo-1532906619279-a782cd0f9c2c?q=80&w=1000&auto=format&fit=crop", badge="BESTSELLER", badge_color="#000", badge_text_color="#fff", category="F1"),
@@ -123,6 +118,12 @@ def seed_products():
     db.session.bulk_save_objects(products)
     db.session.commit()
     print("Database seeded!")
+
+with app.app_context():
+    db.create_all()
+    if Product.query.count() == 0:
+        seed_products()
+
 
 # Authentication Routes
 @app.route('/api/auth/signup', methods=['POST'])
