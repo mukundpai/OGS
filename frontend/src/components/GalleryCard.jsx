@@ -15,25 +15,25 @@ const GalleryCard = ({ submission, onLike }) => {
     };
 
     return (
-        <div className="gallery-card mb-6 break-inside-avoid relative group cursor-pointer">
-            <div className="relative overflow-hidden rounded-sm mb-4">
+        <div className="gallery-card break-inside-avoid relative group cursor-pointer hover:opacity-90 transition-opacity">
+            <div className="relative overflow-hidden rounded-sm mb-3 sm:mb-4">
                 <img
                     src={submission.image_url}
                     alt={submission.caption}
-                    className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="w-full h-48 sm:h-56 md:h-64 object-cover transition-transform duration-700 group-hover:scale-105"
                     loading="lazy"
                 />
 
                 {/* Featured Badge */}
                 {submission.is_featured && (
-                    <div className="absolute top-2 left-2 bg-white text-black text-[8px] font-bold px-1.5 py-0.5 font-mono uppercase tracking-widest z-10">
+                    <div className="absolute top-2 left-2 bg-white text-black text-[8px] font-bold px-1.5 py-0.5 font-mono uppercase tracking-widest z-10 rounded">
                         Featured
                     </div>
                 )}
             </div>
 
             {/* Content Below Image */}
-            <div className="space-y-3">
+            <div className="space-y-2 sm:space-y-3">
                 {/* Rating Stars */}
                 <div className="flex space-x-0.5">
                     {[...Array(5)].map((_, i) => (
@@ -50,22 +50,22 @@ const GalleryCard = ({ submission, onLike }) => {
                     ))}
                 </div>
 
-                <p className="text-gray-300 font-mono text-xs line-clamp-2 leading-relaxed h-8">{submission.caption}</p>
+                <p className="text-gray-300 font-mono text-xs line-clamp-2 leading-relaxed">{submission.caption}</p>
 
-                <div className="flex justify-between items-end border-t border-white/10 pt-3">
-                    <div>
-                        <p className="text-white font-bold text-xs uppercase tracking-wider">{submission.user_name}</p>
+                <div className="flex justify-between items-end border-t border-white/10 pt-2 sm:pt-3">
+                    <div className="flex-1 min-w-0">
+                        <p className="text-white font-bold text-xs uppercase tracking-wider truncate">{submission.user_name}</p>
                         {submission.location && (
-                            <div className="flex items-center text-gray-500 text-[10px] mt-1 font-mono">
-                                <MapPin size={10} className="mr-1" />
-                                {submission.location}
+                            <div className="flex items-center text-gray-500 text-[10px] mt-1 font-mono gap-1 truncate">
+                                <MapPin size={10} className="flex-shrink-0" />
+                                <span className="truncate">{submission.location}</span>
                             </div>
                         )}
                     </div>
 
                     <button
                         onClick={handleLike}
-                        className={`flex items-center space-x-1 ${liked ? 'text-red-500' : 'text-gray-500 hover:text-red-500'} transition-colors`}
+                        className={`flex items-center space-x-1 flex-shrink-0 ml-2 ${liked ? 'text-red-500' : 'text-gray-500 hover:text-red-500'} transition-colors`}
                     >
                         <Heart size={14} fill={liked ? "currentColor" : "none"} />
                         <span className="font-mono text-[10px]">{likesCount}</span>

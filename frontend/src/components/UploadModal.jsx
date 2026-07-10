@@ -55,20 +55,20 @@ const UploadModal = ({ isOpen, onClose, onUpload }) => {
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-            <div className="bg-[#111] border border-white/10 w-full max-w-md p-6 relative animate-in fade-in zoom-in duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80 backdrop-blur-sm">
+            <div className="bg-[#111] border border-white/10 w-full max-w-2xl p-4 sm:p-6 md:p-8 relative animate-in fade-in zoom-in duration-200 max-h-[90vh] overflow-y-auto">
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+                    className="absolute top-3 right-3 sm:top-4 sm:right-4 text-gray-400 hover:text-white transition-colors z-10"
                 >
                     <X size={20} />
                 </button>
 
-                <h2 className="text-2xl font-black mb-6 tracking-tighter">UPLOAD YOUR WALL</h2>
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-black mb-4 sm:mb-6 tracking-tighter pr-8">UPLOAD YOUR WALL</h2>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
                     {/* Image Upload Area */}
-                    <div className="relative border-2 border-dashed border-white/10 rounded-lg p-8 text-center hover:border-white/30 transition-colors cursor-pointer group">
+                    <div className="relative border-2 border-dashed border-white/10 rounded-lg p-4 sm:p-6 md:p-8 text-center hover:border-white/30 transition-colors cursor-pointer group">
                         <input
                             type="file"
                             accept="image/*"
@@ -78,17 +78,17 @@ const UploadModal = ({ isOpen, onClose, onUpload }) => {
 
                         {preview ? (
                             <div className="relative">
-                                <img src={preview} alt="Preview" className="max-h-48 mx-auto rounded-sm shadow-lg" />
+                                <img src={preview} alt="Preview" className="max-h-32 sm:max-h-48 mx-auto rounded-sm shadow-lg" />
                                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                                    <span className="text-sm font-mono">Change Image</span>
+                                    <span className="text-xs sm:text-sm font-mono">Change Image</span>
                                 </div>
                             </div>
                         ) : (
                             <div className="space-y-2">
-                                <div className="mx-auto w-12 h-12 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
-                                    <Upload size={24} className="text-gray-400 group-hover:text-white" />
+                                <div className="mx-auto w-10 sm:w-12 h-10 sm:h-12 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+                                    <Upload size={20} className="text-gray-400 group-hover:text-white sm:size-24" />
                                 </div>
-                                <p className="text-sm text-gray-400 font-mono">Click or drag image here</p>
+                                <p className="text-xs sm:text-sm text-gray-400 font-mono">Click or drag image here</p>
                                 <p className="text-xs text-gray-600 font-mono">Max 5MB (JPG, PNG)</p>
                             </div>
                         )}
@@ -96,30 +96,30 @@ const UploadModal = ({ isOpen, onClose, onUpload }) => {
 
                     {/* Form Fields */}
                     <div>
-                        <label className="block text-xs font-mono text-gray-400 mb-1">LOCATION (OPTIONAL)</label>
+                        <label className="block text-xs font-mono text-gray-400 mb-2">LOCATION (OPTIONAL)</label>
                         <input
                             type="text"
                             value={formData.location}
                             onChange={e => setFormData({ ...formData, location: e.target.value })}
-                            className="w-full bg-white/5 border border-white/10 p-2 text-sm focus:border-white/30 outline-none transition-colors"
+                            className="w-full bg-white/5 border border-white/10 p-2 sm:p-3 text-sm focus:border-white/30 outline-none transition-colors rounded"
                             placeholder="e.g. Bangalore, India"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-xs font-mono text-gray-400 mb-1">CAPTION</label>
+                        <label className="block text-xs font-mono text-gray-400 mb-2">CAPTION</label>
                         <textarea
                             value={formData.caption}
                             onChange={e => setFormData({ ...formData, caption: e.target.value })}
-                            className="w-full bg-white/5 border border-white/10 p-2 text-sm focus:border-white/30 outline-none transition-colors h-24 resize-none"
+                            className="w-full bg-white/5 border border-white/10 p-2 sm:p-3 text-sm focus:border-white/30 outline-none transition-colors h-24 resize-none rounded"
                             placeholder="Tell us about your setup..."
                             required
                         />
                     </div>
 
                     <div>
-                        <label className="block text-xs font-mono text-gray-400 mb-1">RATING</label>
-                        <div className="flex space-x-1">
+                        <label className="block text-xs font-mono text-gray-400 mb-2">RATING</label>
+                        <div className="flex space-x-1 sm:space-x-2">
                             {[1, 2, 3, 4, 5].map((star) => (
                                 <button
                                     key={star}
@@ -128,12 +128,13 @@ const UploadModal = ({ isOpen, onClose, onUpload }) => {
                                     className="focus:outline-none transition-transform hover:scale-110"
                                 >
                                     <svg
-                                        width="24"
-                                        height="24"
+                                        width="20"
+                                        height="20"
                                         viewBox="0 0 24 24"
                                         fill={star <= (formData.rating || 5) ? "white" : "none"}
                                         stroke="white"
                                         strokeWidth="2"
+                                        className="sm:w-6 sm:h-6"
                                     >
                                         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                                     </svg>
@@ -143,7 +144,7 @@ const UploadModal = ({ isOpen, onClose, onUpload }) => {
                     </div>
 
                     {error && (
-                        <div className="text-red-500 text-xs font-mono bg-red-500/10 p-2 border border-red-500/20">
+                        <div className="text-red-500 text-xs font-mono bg-red-500/10 p-2 sm:p-3 border border-red-500/20 rounded">
                             ERROR: {error}
                         </div>
                     )}
@@ -151,7 +152,7 @@ const UploadModal = ({ isOpen, onClose, onUpload }) => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-white text-black font-bold py-3 hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                        className="w-full bg-white text-black font-bold py-2 sm:py-3 hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 rounded text-sm sm:text-base"
                     >
                         {loading ? (
                             <span className="font-mono animate-pulse">UPLOADING...</span>

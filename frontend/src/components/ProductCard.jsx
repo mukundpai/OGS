@@ -13,24 +13,28 @@ const ProductCard = ({ product }) => {
                 {product.badge && (
                     <div style={{
                         position: 'absolute',
-                        top: '10px',
-                        left: '10px',
+                        top: '8px',
+                        left: '8px',
                         background: product.badge_color || '#000',
                         color: product.badge_text_color || '#fff',
                         fontSize: '10px',
                         fontFamily: 'var(--font-mono)',
-                        padding: '4px 8px'
+                        padding: '4px 8px',
+                        borderRadius: '2px',
+                        fontWeight: 'bold',
+                        letterSpacing: '0.05em',
+                        zIndex: 5
                     }}>
                         {product.badge}
                     </div>
                 )}
             </div>
-            <div className="flex justify-between items-start">
-                <div>
-                    <h3 style={{ fontWeight: 700 }}>{product.title}</h3>
-                    <p className="font-mono text-xs text-gray">{product.subtitle}</p>
+            <div className="flex justify-between items-start gap-2">
+                <div className="min-w-0 flex-1">
+                    <h3 className="font-bold text-sm sm:text-base leading-tight truncate">{product.title}</h3>
+                    <p className="font-mono text-xs text-gray truncate">{product.subtitle}</p>
                 </div>
-                <span className="font-mono">{product.price}</span>
+                <span className="font-mono text-xs sm:text-sm text-white whitespace-nowrap">{product.price}</span>
             </div>
         </div>
     );
