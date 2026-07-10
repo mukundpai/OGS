@@ -20,7 +20,10 @@ const Checkout = ({ cartItems, clearCart }) => {
         upiId: ''
     });
 
-    const subtotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+    const subtotal = cartItems.reduce((acc, item) => {
+        const price = parseFloat(item.price.toString().replace(/[^0-9.]/g, ''));
+        return acc + (price * item.quantity);
+    }, 0);
     const shipping = 0; // Free shipping for now
     const total = subtotal + shipping;
 
@@ -275,7 +278,7 @@ const Checkout = ({ cartItems, clearCart }) => {
                                     <div className="flex-1">
                                         <h4 className="font-bold text-sm uppercase">{item.title}</h4>
                                         <p className="text-xs text-gray-600 font-mono">{item.size} / {item.frame}</p>
-                                        <p className="text-sm font-bold mt-1">${item.price * item.quantity}</p>
+                                        <p className="text-sm font-bold mt-1">₹{parseFloat(item.price.toString().replace(/[^0-9.]/g, '')) * item.quantity}</p>
                                     </div>
                                 </div>
                             ))}
@@ -284,7 +287,7 @@ const Checkout = ({ cartItems, clearCart }) => {
                         <div className="border-t border-black/10 pt-6 space-y-2 mb-8">
                             <div className="flex justify-between font-mono text-sm">
                                 <span>SUBTOTAL</span>
-                                <span>${subtotal}</span>
+                                <span>₹{subtotal}</span>
                             </div>
                             <div className="flex justify-between font-mono text-sm">
                                 <span>SHIPPING</span>
@@ -294,7 +297,7 @@ const Checkout = ({ cartItems, clearCart }) => {
 
                         <div className="flex justify-between font-black text-xl mb-8 border-t border-black pt-6">
                             <span>TOTAL</span>
-                            <span>${total}</span>
+                            <span>₹{total}</span>
                         </div>
 
                         <button
@@ -306,7 +309,7 @@ const Checkout = ({ cartItems, clearCart }) => {
                             {status === 'processing' ? (
                                 <span className="animate-pulse">PROCESSING PAYMENT...</span>
                             ) : (
-                                <span>PAY ${total}</span>
+                                <span>PAY ₹{total}</span>
                             )}
                         </button>
                     </div>

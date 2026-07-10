@@ -55,7 +55,7 @@ const Cart = ({ cartItems, updateQuantity, removeFromCart }) => {
                                     <div>
                                         <div className="flex justify-between items-start">
                                             <h3 className="font-bold text-lg">{item.title}</h3>
-                                            <p className="font-mono font-bold">${(price * item.quantity).toFixed(2)}</p>
+                                            <p className="font-mono font-bold">₹{(price * item.quantity).toFixed(2)}</p>
                                         </div>
                                         <p className="text-gray-500 font-mono text-xs">{item.subtitle}</p>
                                         <p className="text-gray-500 font-mono text-xs mt-1">SIZE: {item.size || 'A3'} / FRAME: {item.frame || 'Standard'}</p>
@@ -101,7 +101,7 @@ const Cart = ({ cartItems, updateQuantity, removeFromCart }) => {
                         <div className="space-y-4 mb-8 border-b border-white/10 pb-8">
                             <div className="flex justify-between font-mono text-sm">
                                 <span className="text-gray-400">Subtotal</span>
-                                <span>${subtotal.toFixed(2)}</span>
+                                <span>₹{subtotal.toFixed(2)}</span>
                             </div>
                             <div className="flex justify-between font-mono text-sm">
                                 <span className="text-gray-400">Shipping</span>
@@ -111,7 +111,8 @@ const Cart = ({ cartItems, updateQuantity, removeFromCart }) => {
 
                         <div className="flex justify-between font-bold text-xl mb-8">
                             <span>TOTAL</span>
-                            <span>${subtotal.toFixed(2)}</span>
+                            <span>₹{subtotal.toFixed(2)}</span>
+
                         </div>
 
                         <button

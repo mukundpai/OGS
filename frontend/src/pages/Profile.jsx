@@ -119,7 +119,8 @@ const Profile = () => {
                                                     {order.status}
                                                 </span>
                                             </div>
-                                            <p className="font-mono text-xl font-bold">${order.total_amount}</p>
+                                            <p className="font-mono text-xl font-bold">₹{order.total_amount}</p>
+
                                         </div>
                                     </div>
                                 ))}

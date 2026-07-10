@@ -85,8 +85,9 @@ class Product(db.Model):
             "id": self.id,
             "title": self.title,
             "subtitle": self.subtitle,
-            "price": f"${int(self.price)}", # Format as string for frontend compatibility
+            "price": f"₹{int(self.price)}", # Format as string for frontend compatibility
             "price_raw": self.price,
+
             "image_pattern": self.image_pattern,
             "image_url": self.image_url,
             "badge": self.badge,

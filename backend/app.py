@@ -14,7 +14,13 @@ app = Flask(__name__)
 CORS(app)
 
 # Database Config
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///oglabs.db'
+database_url = os.environ.get('DATABASE_URL')
+if database_url:
+    if database_url.startswith('postgres://'):
+        database_url = database_url.replace('postgres://', 'postgresql://', 1)
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///oglabs.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
 
@@ -86,12 +92,6 @@ def token_required(f):
 # Placeholder for API Key
 # os.environ["GEMINI_API_KEY"] = "YOUR_API_KEY"
 
-@app.before_first_request
-def create_tables():
-    db.create_all()
-    if Product.query.count() == 0:
-        seed_products()
-
 def seed_products():
     products = [
         Product(title="GRAND PRIX '24", subtitle="A3 MATTE POSTER", price=25, image_pattern="pattern-1", image_url="https://images.unsplash.com/photo-1532906619279-a782cd0f9c2c?q=80&w=1000&auto=format&fit=crop", badge="BESTSELLER", badge_color="#000", badge_text_color="#fff", category="F1"),
@@ -118,6 +118,26 @@ def seed_products():
     db.session.bulk_save_objects(products)
     db.session.commit()
     print("Database seeded!")
+
+with app.app_context():
+    db.create_all()
+    if Product.query.count() == 0:
+        seed_products()
+
+    # Seed default admin if not exists
+    admin_email = 'admin@oglabs.com'
+    if not User.query.filter_by(email=admin_email).first():
+        admin = User(
+            email=admin_email,
+            full_name='OG Admin',
+            is_super_user=True
+        )
+        admin.set_password('adminpassword2024')
+        db.session.add(admin)
+        db.session.commit()
+        print("Admin user seeded successfully!")
+
+
 
 # Authentication Routes
 @app.route('/api/auth/signup', methods=['POST'])
@@ -538,6 +558,14 @@ def generate_gemini_content(api_key, prompt, system_instruction=None):
     except Exception as e:
         print(f"Error calling Gemini API: {e}")
         return None
+# Serve static files and fallback to React index.html for client-side routing
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
+    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

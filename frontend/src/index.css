@@ -504,8 +504,22 @@ button {
 @media (min-width: 1280px) {
   .grid {
     grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
   }
 }
+
+@media (max-width: 767px) {
+  .product-card h3 {
+    font-size: 0.85rem;
+  }
+  .product-card span {
+    font-size: 0.85rem;
+  }
+  .section {
+    padding: 3rem 0;
+  }
+}
+
 
 .product-card {
   cursor: pointer;
@@ -645,6 +659,105 @@ button {
   50% {
     opacity: 0;
   }
+}
+
+/* Custom Oracle Coming Soon UI */
+.blink-text {
+  animation: pulse-blink 1.5s infinite;
+}
+
+@keyframes pulse-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.text-yellow {
+  color: #ffc837;
+}
+
+.text-glow {
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.15);
+}
+
+.system-tag {
+  display: inline-block;
+  background: rgba(255, 200, 55, 0.1);
+  color: #ffc837;
+  border: 1px solid rgba(255, 200, 55, 0.2);
+  padding: 4px 8px;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  font-weight: bold;
+}
+
+.calibration-box {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid #1a1a1a;
+  padding: 1.5rem;
+}
+
+.progress-bar-bg {
+  background: #111;
+  height: 6px;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar-fill {
+  background: linear-gradient(90deg, #ffc837, #ff8008);
+  height: 100%;
+  transition: width 0.8s ease-in-out;
+  box-shadow: 0 0 8px #ff8008;
+  position: relative;
+}
+
+.progress-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: progress-shimmer 2s infinite;
+}
+
+@keyframes progress-shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.text-xxs {
+  font-size: 0.65rem;
+}
+
+.oracle-btn-secondary {
+  border: 1px solid #444;
+  color: #888;
+  padding: 0.6rem 1.2rem;
+  transition: all 0.2s;
+  text-transform: uppercase;
+}
+
+.oracle-btn-secondary:hover {
+  border-color: #fff;
+  color: #fff;
+}
+
+.glow-button {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+}
+
+.glow-button:hover {
+  box-shadow: 0 0 20px rgba(255, 200, 55, 0.2);
 }
 
 /* Footer */
@@ -971,4 +1084,148 @@ footer {
 
 .p-2 {
   padding: 0.5rem;
+}
+
+/* Premium Mobile Responsiveness Overrides */
+@media (max-width: 767px) {
+  /* Dynamic Taller Navbar on Mobile to prevent overlap and look clean */
+  .navbar {
+    height: auto !important;
+    min-height: 80px;
+    padding: 12px 0 !important;
+  }
+  .navbar .container {
+    flex-wrap: wrap !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 0 16px !important;
+    gap: 8px !important;
+  }
+  .nav-links {
+    order: 3;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 6px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 10px;
+  }
+  .nav-links a {
+    margin-left: 0 !important;
+    font-size: 0.65rem !important;
+  }
+  
+  /* Hero Section Mobile Padding & Floating Watermarks to solve "blankness" */
+  .hero {
+    height: 100vh !important;
+    padding-top: 80px !important;
+  }
+  .float-item {
+    opacity: 0.12 !important; /* Low watermark opacity on mobile */
+    filter: grayscale(1) !important;
+    pointer-events: none;
+  }
+  /* Arrange all 4 floating items on mobile as background watermarks */
+  .float-item:nth-child(1) {
+    width: 90px !important;
+    height: 135px !important;
+    top: 22% !important;
+    left: 6% !important;
+  }
+  .float-item:nth-child(2) {
+    width: 85px !important;
+    height: 120px !important;
+    top: 20% !important;
+    right: 6% !important;
+  }
+  .float-item:nth-child(3) {
+    width: 90px !important;
+    height: 130px !important;
+    bottom: 18% !important;
+    left: 8% !important;
+    display: block !important;
+  }
+  .float-item:nth-child(4) {
+    width: 85px !important;
+    height: 125px !important;
+    bottom: 15% !important;
+    right: 8% !important;
+    display: block !important;
+  }
+  
+  /* Product Cards Spacing & Layout */
+  .grid {
+    gap: 1.25rem 0.75rem !important; /* Proper vertical and horizontal gap */
+    padding: 0 8px;
+  }
+  .product-card {
+    margin-bottom: 0.5rem;
+  }
+  .product-image {
+    margin-bottom: 0.5rem !important;
+  }
+  .product-card h3 {
+    font-size: 0.8rem !important;
+    line-height: 1.2;
+    margin-top: 0.25rem;
+  }
+  .product-card span {
+    font-size: 0.8rem !important;
+  }
+  .product-card p {
+    font-size: 0.6rem !important;
+    margin-top: 0.15rem;
+  }
+  
+  /* Section Padding */
+  .section {
+    padding: 2.5rem 0 !important;
+  }
+  .section h2 {
+    font-size: 2rem !important;
+  }
+  
+  /* Admin Panel Mobile Spacing & Spacing fixes */
+  .container.section {
+    padding-top: 140px !important;
+  }
+  .admin-product-card {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.75rem !important;
+    position: relative;
+    padding-bottom: 3.5rem !important; /* Make space for action buttons at bottom */
+  }
+  .admin-product-card div:last-child {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+  }
+  .oracle-input {
+    font-size: 0.8rem !important;
+    padding: 0.75rem 0 !important;
+  }
+  .terminal-window {
+    padding: 1.25rem !important;
+  }
+  .terminal-header {
+    flex-direction: column !important;
+    gap: 0.25rem !important;
+    align-items: flex-start !important;
+    margin-bottom: 1.5rem !important;
+  }
+  .waitlist-form .flex {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 1rem !important;
+  }
+  .waitlist-form .oracle-btn {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+  .waitlist-form span.text-gray {
+    text-align: center !important;
+    width: 100% !important;
+  }
 }
