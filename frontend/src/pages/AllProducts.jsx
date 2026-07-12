@@ -1,5 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import ProductCard from '../components/ProductCard';
+import CustomSelect from '../components/CustomSelect';
+
+const categoryOptions = [
+    { value: 'All', label: 'ALL CATEGORIES' },
+    { value: 'F1', label: 'F1' },
+    { value: 'MotoGP', label: 'MOTOGP' },
+    { value: 'Anime', label: 'ANIME' },
+    { value: 'Cinema', label: 'CINEMA' },
+    { value: 'Cricket', label: 'CRICKET' },
+    { value: 'Split Posters', label: 'SPLIT POSTERS' }
+];
+
+const sortOptions = [
+    { value: 'default', label: 'SORT' },
+    { value: 'asc', label: 'PRICE: LOW TO HIGH' },
+    { value: 'desc', label: 'PRICE: HIGH TO LOW' }
+];
 
 const AllProducts = () => {
     const [products, setProducts] = useState([]);
@@ -24,26 +41,18 @@ const AllProducts = () => {
                 
                 {/* Filters - Stack on mobile, horizontal on desktop */}
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                    <select 
-                        className="font-mono bg-black text-white border border-gray-800 p-2.5 sm:p-3 text-sm flex-1 sm:flex-none rounded focus:outline-none focus:border-white transition-colors" 
-                        onChange={(e) => setCategory(e.target.value)}
-                    >
-                        <option value="All">ALL CATEGORIES</option>
-                        <option value="F1">F1</option>
-                        <option value="MotoGP">MOTOGP</option>
-                        <option value="Anime">ANIME</option>
-                        <option value="Cinema">CINEMA</option>
-                        <option value="Cricket">CRICKET</option>
-                        <option value="Split Posters">SPLIT POSTERS</option>
-                    </select>
-                    <select 
-                        className="font-mono bg-black text-white border border-gray-800 p-2.5 sm:p-3 text-sm flex-1 sm:flex-none rounded focus:outline-none focus:border-white transition-colors" 
-                        onChange={(e) => setSort(e.target.value)}
-                    >
-                        <option value="default">SORT</option>
-                        <option value="asc">PRICE: LOW TO HIGH</option>
-                        <option value="desc">PRICE: HIGH TO LOW</option>
-                    </select>
+                    <CustomSelect 
+                        className="flex-1 sm:flex-none sm:min-w-[200px]"
+                        value={category}
+                        onChange={setCategory}
+                        options={categoryOptions}
+                    />
+                    <CustomSelect 
+                        className="flex-1 sm:flex-none sm:min-w-[200px]"
+                        value={sort}
+                        onChange={setSort}
+                        options={sortOptions}
+                    />
                 </div>
             </div>
 

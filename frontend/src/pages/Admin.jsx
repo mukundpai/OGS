@@ -3,6 +3,23 @@ import { Trash2, Edit2, Upload, X, Check } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../components/Loader';
+import CustomSelect from '../components/CustomSelect';
+
+const categoryOptions = [
+    { value: 'F1', label: 'F1' },
+    { value: 'MotoGP', label: 'MotoGP' },
+    { value: 'Anime', label: 'Anime' },
+    { value: 'Cinema', label: 'Cinema' },
+    { value: 'Cricket', label: 'Cricket' },
+    { value: 'Split Posters', label: 'Split Posters' }
+];
+
+const patternOptions = [
+    { value: 'pattern-1', label: 'Pattern 1' },
+    { value: 'pattern-2', label: 'Pattern 2' },
+    { value: 'pattern-3', label: 'Pattern 3' },
+    { value: 'pattern-4', label: 'Pattern 4' }
+];
 
 const Admin = ({ triggerToast }) => {
     const { user, loading, token } = useAuth();
@@ -193,29 +210,19 @@ const Admin = ({ triggerToast }) => {
                             required
                         />
 
-                        <select
-                            className="oracle-input"
+                        <CustomSelect
+                            className="w-full"
                             value={formData.category}
-                            onChange={e => setFormData({ ...formData, category: e.target.value })}
-                        >
-                            <option value="F1">F1</option>
-                            <option value="MotoGP">MotoGP</option>
-                            <option value="Anime">Anime</option>
-                            <option value="Cinema">Cinema</option>
-                            <option value="Cricket">Cricket</option>
-                            <option value="Split Posters">Split Posters</option>
-                        </select>
+                            onChange={(val) => setFormData({ ...formData, category: val })}
+                            options={categoryOptions}
+                        />
 
-                        <select
-                            className="oracle-input"
+                        <CustomSelect
+                            className="w-full"
                             value={formData.image_pattern}
-                            onChange={e => setFormData({ ...formData, image_pattern: e.target.value })}
-                        >
-                            <option value="pattern-1">Pattern 1</option>
-                            <option value="pattern-2">Pattern 2</option>
-                            <option value="pattern-3">Pattern 3</option>
-                            <option value="pattern-4">Pattern 4</option>
-                        </select>
+                            onChange={(val) => setFormData({ ...formData, image_pattern: val })}
+                            options={patternOptions}
+                        />
                     </div>
 
                     {/* Image Upload Section */}
