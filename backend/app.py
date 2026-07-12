@@ -284,7 +284,11 @@ def handle_product(id):
         return jsonify({"message": "Product deleted successfully"}), 200
 
 @app.route('/api/products/upload', methods=['POST'])
-def upload_product_image():
+@token_required
+def upload_product_image(current_user):
+    if not current_user.is_super_user:
+        return jsonify({'error': 'Admin access required'}), 403
+        
     if 'image' not in request.files:
         return jsonify({"error": "No image file provided"}), 400
     

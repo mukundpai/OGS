@@ -4,6 +4,7 @@ import { ShoppingCart, ChevronRight } from 'lucide-react';
 import Accordion from '../components/Accordion';
 import ReviewSection from '../components/ReviewSection';
 import ProductCard from '../components/ProductCard';
+import Loader from '../components/Loader';
 
 const ProductDetail = ({ addToCart }) => {
     const { id } = useParams();
@@ -23,7 +24,7 @@ const ProductDetail = ({ addToCart }) => {
             .then(data => setRelatedProducts(data.slice(0, 4)));
     }, [id]);
 
-    if (!product) return <div className="container section text-center" style={{ paddingTop: '100px' }}>LOADING...</div>;
+    if (!product) return <Loader message="RETRIEVING PRODUCT ARCHIVES..." />;
 
     const isSplitPoster = product.category === 'Split Posters';
     const displayPrice = isSplitPoster ? '₹249' : (size === 'A6' ? '₹29' : size === 'A4' ? '₹49' : '₹99');

@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Trash2, Edit2, Upload, X, Check } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import Loader from '../components/Loader';
 
 const Admin = ({ triggerToast }) => {
-    const { user, loading } = useAuth();
+    const { user, loading, token } = useAuth();
     const navigate = useNavigate();
     const [products, setProducts] = useState([]);
     const [editingId, setEditingId] = useState(null);
@@ -57,6 +58,9 @@ const Admin = ({ triggerToast }) => {
         try {
             const response = await fetch('/api/products/upload', {
                 method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
                 body: formDataUpload
             });
             const data = await response.json();
@@ -148,7 +152,7 @@ const Admin = ({ triggerToast }) => {
     };
 
     if (loading) {
-        return <div className="container section text-center font-mono text-xs text-gray" style={{ paddingTop: '160px' }}>AUTHENTICATING ACCESS TERMINAL...</div>;
+        return <Loader message="AUTHENTICATING ACCESS TERMINAL..." />;
     }
 
     return (
