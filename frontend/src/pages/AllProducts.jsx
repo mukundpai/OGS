@@ -34,6 +34,7 @@ const AllProducts = () => {
                         <option value="Anime">ANIME</option>
                         <option value="Cinema">CINEMA</option>
                         <option value="Cricket">CRICKET</option>
+                        <option value="Split Posters">SPLIT POSTERS</option>
                     </select>
                     <select 
                         className="font-mono bg-black text-white border border-gray-800 p-2.5 sm:p-3 text-sm flex-1 sm:flex-none rounded focus:outline-none focus:border-white transition-colors" 

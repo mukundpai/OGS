@@ -35,26 +35,27 @@ function App() {
   const [showToast, setShowToast] = useState(false);
 
   const addToCart = (product) => {
+    const cartItemId = `${product.id}-${product.size || 'A3'}-${product.frame || 'Standard'}`;
     setCartItems(prevItems => {
-      const existingItem = prevItems.find(item => item.id === product.id);
+      const existingItem = prevItems.find(item => item.cartItemId === cartItemId);
       if (existingItem) {
         return prevItems.map(item =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+          item.cartItemId === cartItemId ? { ...item, quantity: item.quantity + 1 } : item
         );
       }
-      return [...prevItems, { ...product, quantity: 1 }];
+      return [...prevItems, { ...product, cartItemId, quantity: 1 }];
     });
     triggerToast(`ADDED TO CART: ${product.title}`);
   };
 
-  const removeFromCart = (productId) => {
-    setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
+  const removeFromCart = (cartItemId) => {
+    setCartItems(prevItems => prevItems.filter(item => item.cartItemId !== cartItemId));
   };
 
-  const updateQuantity = (productId, delta) => {
+  const updateQuantity = (cartItemId, delta) => {
     setCartItems(prevItems => {
       return prevItems.map(item => {
-        if (item.id === productId) {
+        if (item.cartItemId === cartItemId) {
           const newQuantity = Math.max(1, item.quantity + delta);
           return { ...item, quantity: newQuantity };
         }
@@ -92,7 +93,7 @@ function App() {
             <Route path="/product/:id" element={<ProductDetail addToCart={addToCart} />} />
             <Route path="/cart" element={<Cart cartItems={cartItems} updateQuantity={updateQuantity} removeFromCart={removeFromCart} />} />
             <Route path="/checkout" element={<Checkout cartItems={cartItems} clearCart={clearCart} />} />
-            <Route path="/admin" element={<Admin />} />
+            <Route path="/admin" element={<Admin triggerToast={triggerToast} />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/profile" element={<Profile />} />

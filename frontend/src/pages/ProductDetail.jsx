@@ -25,6 +25,17 @@ const ProductDetail = ({ addToCart }) => {
 
     if (!product) return <div className="container section text-center" style={{ paddingTop: '100px' }}>LOADING...</div>;
 
+    const isSplitPoster = product.category === 'Split Posters';
+    const displayPrice = isSplitPoster ? '₹249' : (size === 'A6' ? '₹29' : size === 'A4' ? '₹49' : '₹99');
+
+    const getDimensions = () => {
+        if (isSplitPoster) return { height: 'Combo', width: 'Combo' };
+        if (size === 'A6') return { height: '14.8 cm', width: '10.5 cm' };
+        if (size === 'A4') return { height: '29.7 cm', width: '21.0 cm' };
+        return { height: '42.0 cm', width: '29.7 cm' }; // A3
+    };
+    const dimensions = getDimensions();
+
     return (
         <div className="container section" style={{ paddingTop: '100px', paddingBottom: '40px' }}>
             {/* Breadcrumbs */}
@@ -60,7 +71,7 @@ const ProductDetail = ({ addToCart }) => {
                                 background: '#000',
                                 padding: '2px 4px',
                                 whiteSpace: 'nowrap'
-                            }}>42.0 cm</span>
+                            }}>{dimensions.height}</span>
                             <div style={{ width: '1px', flex: 1, background: '#fff' }}></div>
                         </div>
 
@@ -83,7 +94,7 @@ const ProductDetail = ({ addToCart }) => {
                                 background: '#000',
                                 padding: '2px 4px',
                                 whiteSpace: 'nowrap'
-                            }}>29.7 cm</span>
+                            }}>{dimensions.width}</span>
                             <div style={{ height: '1px', flex: 1, background: '#fff' }}></div>
                         </div>
 
@@ -104,27 +115,29 @@ const ProductDetail = ({ addToCart }) => {
                     <h1 className="text-3xl md:text-4xl font-bold mb-1 leading-tight">{product.title}</h1>
                     <p className="text-lg text-gray mb-4">{product.subtitle}</p>
 
-                    <div className="text-2xl font-bold text-white mb-6">{product.price}</div>
+                    <div className="text-2xl font-bold text-white mb-6">{displayPrice}</div>
 
-                    <div className="mb-8">
-                        <label className="block text-xxs font-bold uppercase mb-2">Poster Size</label>
-                        <div className="flex gap-3">
-                            {['A3', 'A2', 'A1'].map(s => (
-                                <button
-                                    key={s}
-                                    onClick={() => setSize(s)}
-                                    className={`px-4 py-2 border text-xs font-mono uppercase transition-all ${size === s ? 'border-white text-white bg-gray-900' : 'border-gray-700 text-gray hover:border-white'}`}
-                                >
-                                    {s}
-                                </button>
-                            ))}
+                    {!isSplitPoster && (
+                        <div className="mb-8">
+                            <label className="block text-xxs font-bold uppercase mb-2">Poster Size</label>
+                            <div className="flex gap-3">
+                                {['A6', 'A4', 'A3'].map(s => (
+                                    <button
+                                        key={s}
+                                        onClick={() => setSize(s)}
+                                        className={`px-4 py-2 border text-xs font-mono uppercase transition-all ${size === s ? 'border-white text-white bg-gray-900' : 'border-gray-700 text-gray hover:border-white'}`}
+                                    >
+                                        {s}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
-                    </div>
+                    )}
 
                     {/* Actions */}
                     <div className="flex flex-col gap-3 mb-8">
                         <button
-                            onClick={() => addToCart({ ...product, size, frame: frameType })}
+                            onClick={() => addToCart({ ...product, size: isSplitPoster ? 'Combo' : size, frame: frameType, price: displayPrice })}
                             className="w-full bg-white hover:bg-gray-200 text-black font-bold py-3 uppercase tracking-wider flex items-center justify-center gap-2 transition-colors text-sm"
                         >
                             <ShoppingCart size={18} />

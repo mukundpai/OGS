@@ -3,11 +3,12 @@ import { Trash2, Edit2, Upload, X, Check } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-const Admin = () => {
+const Admin = ({ triggerToast }) => {
     const { user, loading } = useAuth();
     const navigate = useNavigate();
     const [products, setProducts] = useState([]);
     const [editingId, setEditingId] = useState(null);
+    const [deleteConfirmId, setDeleteConfirmId] = useState(null);
     const [imageFile, setImageFile] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
     const [uploading, setUploading] = useState(false);
@@ -76,7 +77,7 @@ const Admin = () => {
         if (imageFile) {
             imageUrl = await uploadImage();
             if (!imageUrl) {
-                alert('Failed to upload image');
+                triggerToast('FAILED TO UPLOAD IMAGE');
                 return;
             }
         }
@@ -92,7 +93,7 @@ const Admin = () => {
             })
                 .then(res => res.json())
                 .then(() => {
-                    alert('Product Updated!');
+                    triggerToast('PRODUCT UPDATED!');
                     resetForm();
                     fetchProducts();
                 });
@@ -105,7 +106,7 @@ const Admin = () => {
             })
                 .then(res => res.json())
                 .then(() => {
-                    alert('Product Added!');
+                    triggerToast('PRODUCT ADDED!');
                     resetForm();
                     fetchProducts();
                 });
@@ -127,14 +128,13 @@ const Admin = () => {
     };
 
     const handleDelete = (id) => {
-        if (!confirm('Are you sure you want to delete this product?')) return;
-
         fetch(`/api/products/${id}`, {
             method: 'DELETE'
         })
             .then(() => {
-                alert('Product Deleted!');
+                triggerToast('PRODUCT DELETED!');
                 fetchProducts();
+                setDeleteConfirmId(null);
             });
     };
 
@@ -199,6 +199,7 @@ const Admin = () => {
                             <option value="Anime">Anime</option>
                             <option value="Cinema">Cinema</option>
                             <option value="Cricket">Cricket</option>
+                            <option value="Split Posters">Split Posters</option>
                         </select>
 
                         <select
@@ -321,11 +322,18 @@ const Admin = () => {
                                     <Edit2 size={18} />
                                 </button>
                                 <button
-                                    onClick={() => handleDelete(product.id)}
+                                    onClick={() => {
+                                        if (deleteConfirmId === product.id) {
+                                            handleDelete(product.id);
+                                        } else {
+                                            setDeleteConfirmId(product.id);
+                                            setTimeout(() => setDeleteConfirmId(null), 3000);
+                                        }
+                                    }}
                                     className="p-2 hover:bg-red-900 transition-colors"
-                                    title="Delete"
+                                    title={deleteConfirmId === product.id ? "Confirm Delete" : "Delete"}
                                 >
-                                    <Trash2 size={18} />
+                                    {deleteConfirmId === product.id ? <Check size={18} /> : <Trash2 size={18} />}
                                 </button>
                             </div>
                         </div>

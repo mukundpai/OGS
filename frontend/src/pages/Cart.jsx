@@ -36,7 +36,7 @@ const Cart = ({ cartItems, updateQuantity, removeFromCart }) => {
                     {cartItems.map(item => {
                         const price = parseFloat(item.price.toString().replace(/[^0-9.]/g, ''));
                         return (
-                            <div className="flex gap-6 border-b border-white/10 pb-8">
+                            <div key={item.cartItemId} className="flex gap-6 border-b border-white/10 pb-8">
                                 {/* Image */}
                                 <div className="flex-shrink-0 relative overflow-hidden bg-gray-900" style={{ width: '100px', height: '130px' }}>
                                     {item.image_url ? (
@@ -65,7 +65,7 @@ const Cart = ({ cartItems, updateQuantity, removeFromCart }) => {
                                         {/* Quantity Controls */}
                                         <div className="flex items-center border border-white/20">
                                             <button
-                                                onClick={() => updateQuantity(item.id, -1)}
+                                                onClick={() => updateQuantity(item.cartItemId, -1)}
                                                 className="p-2 hover:bg-white/10 transition-colors"
                                                 disabled={item.quantity <= 1}
                                             >
@@ -73,7 +73,7 @@ const Cart = ({ cartItems, updateQuantity, removeFromCart }) => {
                                             </button>
                                             <span className="px-4 font-mono text-sm">{item.quantity}</span>
                                             <button
-                                                onClick={() => updateQuantity(item.id, 1)}
+                                                onClick={() => updateQuantity(item.cartItemId, 1)}
                                                 className="p-2 hover:bg-white/10 transition-colors"
                                             >
                                                 <Plus size={14} />
@@ -81,7 +81,7 @@ const Cart = ({ cartItems, updateQuantity, removeFromCart }) => {
                                         </div>
 
                                         <button
-                                            onClick={() => removeFromCart(item.id)}
+                                            onClick={() => removeFromCart(item.cartItemId)}
                                             className="text-gray-500 hover:text-red-500 transition-colors"
                                         >
                                             <Trash2 size={18} />
